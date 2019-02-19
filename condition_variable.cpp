@@ -24,7 +24,6 @@ class Factory
     void producer(int id)
     {
       int count = 10;
-      // unique_lock<mutex> lck(mtx, std::try_to_lock);
       while(count !=0)
       {
         unique_lock<mutex> lck(mtx);
@@ -34,7 +33,7 @@ class Factory
         for(int i = 0; i < 10; i++)
         {
           m_deque.push_back(i);   
-          cout << "(id)-"<< id << "size:" << m_deque.size() << endl;
+          cout << "(producer)" << "-(id " << id << ")" << "size:" << m_deque.size() << endl;
         } 
         lck.unlock();
         this_thread::sleep_for(chrono::milliseconds(300));
@@ -50,13 +49,11 @@ class Factory
       {
         unique_lock<mutex> lck(mtx);
         while(m_deque.size() <= 2){
-          // cv.wait(lck, [&](){return !m_deque.empty();});
           cv.wait(lck);
         }
-        //should lock
         for(int i=0;i<5;i++)
         {
-          cout << "(consumer)" << "(id)- " << id << "pop out:" << m_deque.front() << "-" << i << endl;
+          cout << "(consumer)" << "-(id " << id << ")" << "pop out:" << m_deque.front() << "-" << i << endl;
           m_deque.pop_front();   
         }
         lck.unlock();
@@ -70,12 +67,12 @@ class Factory
 int main()
 {
   Factory f;
-  thread p1(&Factory::producer,std::ref(f), 1);
-  thread p2(&Factory::producer,std::ref(f), 2);
-  thread c1(&Factory::consumer,std::ref(f), 1 );
-  thread c2(&Factory::consumer,std::ref(f), 2 );
-  thread c3(&Factory::consumer,std::ref(f), 3 );
-  thread c4(&Factory::consumer,std::ref(f), 3 );
+  thread p1(&Factory::producer, &f, 1);
+  thread p2(&Factory::producer, &f, 2);
+  thread c1(&Factory::consumer, &f, 1 );
+  thread c2(&Factory::consumer, &f, 2 );
+  thread c3(&Factory::consumer, &f, 3 );
+  thread c4(&Factory::consumer, &f, 4 );
 
   p1.join();
   p2.join();
