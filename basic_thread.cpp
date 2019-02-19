@@ -11,7 +11,7 @@ void func(int n)
 {
   for(int i = 0; i < n ; i++){
     cout << "(child)thread id:" << this_thread::get_id() << ", value:" << i << endl;
-    // this_thread::sleep_for(chrono::milliseconds(100));
+    this_thread::sleep_for(chrono::milliseconds(100));
   }
 }
 
@@ -22,7 +22,7 @@ class Obj
     {
       for(int i = 0; i < n ; i++){
         cout << "(obj func)thread id:" << this_thread::get_id() << ", value:" << i << endl;
-        // this_thread::sleep_for(chrono::milliseconds(100));
+        this_thread::sleep_for(chrono::milliseconds(100));
       }
     }
 };
@@ -31,7 +31,6 @@ int main()
 {
   // call thread constructor w/ function name
   thread t1(func, 20);
-
 
   // call thread constructor w/ lambda function 
   thread t2([](int n){
@@ -48,7 +47,6 @@ int main()
     // this_thread::sleep_for(chrono::milliseconds(70));
   }
 
-  // block
   if(t1.joinable())
     t1.join();
   if(t2.joinable())
