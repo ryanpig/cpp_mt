@@ -10,3 +10,7 @@ Multi-threading in C++
 - basic thread
 - lock_guard & mutex
 - condition variable (consumer & producer)
+- profiling async (using `iprof` to profile async functions)
+
+### Reference
+- [iprof, simple profiling library](https://github.com/Neurochrom/iprof)
