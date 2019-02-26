@@ -1,5 +1,5 @@
 # The name of the final executable
-TARGET := basic_thread condition_variable mutex
+TARGET := basic_thread condition_variable mutex profiling_async
 # \mutex condition_variable 
 # The directory in which to put compilation artifacts
 
@@ -23,12 +23,7 @@ else ifeq ($(UNAME_VAL),Linux)
 	CXXFLAGS += -DHAVE_SIGACTION
 endif
 
-# Flags for testing
-CXXFLAGS_TEST := $(CXXFLAGS)
-LDFLAGS_TEST  := $(LDFLAGS)
-
 # Collect sources
-SRC_DIR_TEST = . 
 CXX_SOURCES := $(wildcard *.cpp)
 
 # Compute necessary compilation artifacts
@@ -45,9 +40,9 @@ clean:
 	rm -f $(TARGET)
 	rm -f *.o
 
-$(TARGET): $(CXX_SOURCES)
+$(TARGET): $(CXX_SOURCES) iprof/iprof.cpp
 	@echo LD $@ 
-	@$(CXX) $(CXXFLAGS) -o $@ $@.cpp $(LDFLAGS)
+	@$(CXX) $(CXXFLAGS) -o $@ $@.cpp iprof/iprof.cpp $(LDFLAGS)
 
 # Make sure the dependency relations get read by 'make'
 -include $(DEP_FILES)
